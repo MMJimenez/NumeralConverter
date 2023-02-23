@@ -1,7 +1,7 @@
 package org.example;
 
 import java.text.Normalizer;
-
+// TODO Reducir switch, haciendo un trim y quitando "y" a textNumeral
 public class NumeralConverter {
     private final String TAG = "NumeralConverter";
     private final String textNumeral;

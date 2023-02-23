@@ -1,0 +1,23 @@
+package org.example;
+
+
+public class Main {
+    public static void main(String[] args) {
+        boolean testList = true;
+
+        String[] listaNumerales = new String[]{
+                "diez", "veinte", "treinta", "cuarenta", "cincuenta", "sesenta", "setenta", "ochenta", "noventa", "cien", "doscientos", "trescientos", "cuatrocientos", "quinientos", "seiscientos", "setecientos", "ochocientos", "novecientos", "cero", "uno", "dos", "tres", "cuatro", "cinco", "seis", "siete", "ocho", "nueve", "diez", "once", "doce", "trece", "catorce", "quince", "dieciséis", "diecisiete", "dieciocho", "diecinueve", "veinte", "veintiuno", "veintidós", "veintitrés", "veinticuatro", "veinticinco", "veintiseis", "veintisiete", "veintiocho", "veintinueve", "trescientos", "treinta", "treinta y uno", "treinta dos", "treinti tres", "treinticuatro", "treinta y cinco", "treintaseis", "treinti siete", "treintaocho", "treinta y nueve", "cuatrocientos", "cuarenta", "cuarenta y uno", "cuarenta dos", "cuarenta tres", "cuarenta y cuatro", "cuarenta y cinco", "cuarenta y seis", "cuarenta siete", "cuarenta ocho", "cuarenta y nueve", "quinientos", "cincuenta", "cincuenta y uno", "cincuenta dos", "cincuenta tres", "cincuenta y cuatro", "cincuenta y cinco", "cincuenta y seis", "cincuenta siete", "cincuenta y ocho", "cincuenta y nueve", "seiscientos", "seiscientos uno", "seiscientos dos", "seiscientos tres", "sesenta", "sesenta y uno", "sesenta dos", "sesenta tres", "sesenta y cuatro", "sesenta y cinco", "sesenta y seis", "sesenta siete", "sesenta y ocho", "sesenta y nueve", "setecientos", "setecientos uno", "setecientos dos", "setecientos tres", "setenta", "setenta y uno", "setenta dos", "setenta tres", "setenta y cuatro", "setenta y cinco", "setenta y seis", "setenta siete", "setenta y ocho", "setenta y nueve", "ochocientos", "ochenta", "ochenta y uno", "ochenta dos", "ochenta tres", "ochenta y cuatro", "ochenta y cinco", "ochenta y seis", "ochenta siete", "ochenta y ocho", "ochenta y nueve", "novecientos", "noventa", "noventa y uno", "noventa dos", "noventa tres", "noventa y cuatro", "noventa y cinco", "noventa y seis", "noventa siete", "noventa y ocho", "noventa y nueve",
+                "doscientos setenta y uno", "cuatrocientos cincuenta y seis", "setenta y tres", "ciento setenta y nueve", "novecientos cuarenta y ocho", "ochocientos cincuenta y dos", "seiscientos diecisiete", "trescientos ochenta y uno", "quinientos treinta y cuatro", "cincuenta y nueve", "doscientos dieciséis", "setecientos cincuenta y uno", "trescientos catorce", "ochenta y seis", "novecientos noventa y uno", "ciento cuarenta y tres", "cuatrocientos setenta y siete", "seiscientos noventa y dos", "ciento setenta y cinco", "quinientos ochenta y ocho", "trescientos trece", "setenta y cinco", "ochocientos setenta y nueve", "doscientos veinticinco", "novecientos ochenta y seis", "ciento ochenta y uno", "cuatrocientos catorce", "seiscientos treinta y siete", "doscientos sesenta y tres", "quinientos noventa y dos", "noventa y nueve", "setecientos cincuenta y seis", "trescientos ochenta y ocho", "ochenta y tres", "novecientos cuarenta y siete", "ciento veintiséis", "cuatrocientos cincuenta y tres", "seiscientos cincuenta y uno", "doscientos setenta y cinco", "quinientos setenta y tres", "trescientos uno", "setenta y dos", "ochocientos noventa y nueve", "doscientos cuarenta y ocho", "novecientos cincuenta y dos", "ciento cuarenta y seis", "cuatrocientos noventa y ocho", "seiscientos cincuenta y seis", "trescientos cuarenta y seis", "cincuenta y cinco", "setecientos treinta y nueve", "ochenta y siete", "novecientos setenta y tres", "ciento ochenta y cinco", "cuatrocientos setenta y seis", "seiscientos nueve", "doscientos cincuenta y uno", "quinientos cincuenta y uno", "trescientos cuarenta y dos", "setenta y ocho", "ochocientos cuarenta y tres", "doscientos diecinueve", "novecientos cincuenta y cuatro", "ciento catorce", "cuatrocientos treinta y uno", "seiscientos cuarenta y seis", "doscientos cincuenta y cinco", "quinientos cuarenta y cinco", "trescientos veinticuatro", "cincuenta y ocho", "setecientos cuarenta y ocho", "ochenta y uno",
+                "cero", "uno",
+        };
+
+        for (int i = 0; i < listaNumerales.length && testList; i++) {
+            Integer num = new NumeralConverter(listaNumerales[i]).convert();
+            if (num != null) {
+                System.out.println(num + "\t// " + listaNumerales[i]);
+            } else {
+                System.out.println("Fallado en:" + listaNumerales[i]);
+            }
+        }
+    }
+}

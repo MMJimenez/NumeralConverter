@@ -1,7 +1,7 @@
 package org.example;
 
 import java.text.Normalizer;
-// TODO Reducir switch, haciendo un trim y quitando "y" a textNumeral
+
 public class NumeralConverter {
     private final String TAG = "NumeralConverter";
     private final String textNumeral;
@@ -9,26 +9,40 @@ public class NumeralConverter {
     private Integer startCharPos = 0;
 
     public NumeralConverter(String textNumeral) {
+        textNumeral = textNumeral.replace("y", "");
+        textNumeral = textNumeral.replace(" ", "");
         this.textNumeral = stripAccents(textNumeral.toLowerCase());
     }
 
     public Integer convert() throws NullPointerException {
         int attempts = 0;
+
+        if (isNumber(textNumeral)) {
+            try {
+                return Integer.valueOf(textNumeral);
+            } catch (NumberFormatException ex) {
+
+            }
+        }
+
+        if (textNumeral.equals("cero")) return 0;
+
         while (startCharPos < textNumeral.length() && attempts <= 3) {
             findInUnit();
             findInLargeNum();
             findInUniquesTens();
-            attempts ++;
+            if (numberResult == 0) {
+                numberResult = null;
+                break; // Not obtained any number in fist interation
+            }
+            attempts++;
         }
-        return (numberResult == 0 && !textNumeral.equals("cero")) ? null : numberResult;
+        return numberResult;
     }
 
     private void findInUnit() {
         String remainingWords = (startCharPos < textNumeral.length()) ? textNumeral.substring(startCharPos) : "";
         switch (remainingWords) {
-            case "cero":
-                startCharPos += "cero".length();
-                break;
             case "un":
                 numberResult += 1;
                 startCharPos += "un".length();
@@ -117,12 +131,6 @@ public class NumeralConverter {
                 if (remainingWords.equals("diez")) {
                     startCharPos += "diez".length();
                     numberResult += 10;
-                } else if (remainingWords.startsWith("diez y ")) {
-                    startCharPos += "diez y ".length();
-                    numberResult += 10;
-                } else if (remainingWords.startsWith("dieci ")) {
-                    startCharPos += "dieci ".length();
-                    numberResult += 10;
                 } else if (remainingWords.startsWith("dieci")) {
                     startCharPos += "dieci".length();
                     numberResult += 10;
@@ -133,12 +141,6 @@ public class NumeralConverter {
                 if (remainingWords.equals("cien")) {
                     startCharPos += "cien".length();
                     numberResult += 100;
-                } else if (remainingWords.startsWith("ciento y ")) {
-                    startCharPos += "ciento y ".length();
-                    numberResult += 100;
-                } else if (remainingWords.startsWith("ciento ")) {
-                    startCharPos += "ciento ".length();
-                    numberResult += 100;
                 } else if (remainingWords.startsWith("ciento")) {
                     startCharPos += "ciento".length();
                     numberResult += 100;
@@ -146,29 +148,14 @@ public class NumeralConverter {
                 break;
 
             case "vei": // 20
-                if (remainingWords.startsWith("veinte y")
-                        || remainingWords.startsWith("veinti y")) {
-                    startCharPos += "veint- y ".length();
-                    numberResult += 20;
-                } else if (remainingWords.startsWith("veinte ")
-                        || remainingWords.startsWith("veinti ")) {
-                    startCharPos += "veint- ".length();
-                    numberResult += 20;
-                } else if (remainingWords.startsWith("veinte")
-                        || remainingWords.startsWith("veinti")) {
+                if (remainingWords.startsWith("veinte") || remainingWords.startsWith("veinti")) {
                     startCharPos += "veint-".length();
                     numberResult += 20;
                 }
                 break;
 
             case "dos": // 200
-                if (remainingWords.startsWith("doscientos y ")) {
-                    startCharPos += "doscientos y ".length();
-                    numberResult += 200;
-                } else if (remainingWords.startsWith("doscientos ")) {
-                    startCharPos += "doscientos ".length();
-                    numberResult += 200;
-                } else if (remainingWords.startsWith("doscientos")) {
+                if (remainingWords.startsWith("doscientos") || remainingWords.startsWith("doscientas")) {
                     startCharPos += "doscientos".length();
                     numberResult += 200;
                 }
@@ -176,21 +163,13 @@ public class NumeralConverter {
 
             case "tre":
                 // 300...
-                if (remainingWords.startsWith("trescientos")) {
+                if (remainingWords.startsWith("trescientos") || remainingWords.startsWith("trescientas")) {
                     numberResult += 300;
                     countHundredsTermination(remainingWords);
                     break;
                 }
                 // 30
-                if (remainingWords.startsWith("treinta y")) {
-                    startCharPos += "treinta y ".length();
-                    numberResult += 30;
-                } else if (remainingWords.startsWith("treinti ")
-                        || remainingWords.startsWith("treinta ")) {
-                    startCharPos += "treint- ".length();
-                    numberResult += 30;
-                } else if (remainingWords.startsWith("treinti")
-                        || remainingWords.startsWith("treinta")) {
+                if (remainingWords.startsWith("treinti") || remainingWords.startsWith("treinta")) {
                     startCharPos += "treint-".length();
                     numberResult += 30;
                 }
@@ -198,95 +177,69 @@ public class NumeralConverter {
 
             case "cua":
                 // 400
-                if (remainingWords.startsWith("cuatrocientos y ")) {
-                    startCharPos += "cuatrocientos y ".length();
-                    numberResult += 400;
-                } else if (remainingWords.startsWith("cuatrocientos ")) {
-                    startCharPos += "cuatrocientos ".length();
-                    numberResult += 400;
-                } else if (remainingWords.startsWith("cuatrocientos")) {
+                 if (remainingWords.startsWith("cuatrocientos") || remainingWords.startsWith("cuatrocientas")) {
                     startCharPos += "cuatrocientos".length();
                     numberResult += 400;
                 }
                 // 40...
-                if (remainingWords.startsWith("cuarenta y")) {
-                    startCharPos += "cuarenta y ".length();
-                    numberResult += 40;
-                } else if (remainingWords.startsWith("cuarenta ")) {
-                    startCharPos += "cuarenta ".length();
-                    numberResult += 40;
-                } else if (remainingWords.startsWith("cuarenta")
-                         ||remainingWords.startsWith("cuarenti")) {
+                if (remainingWords.startsWith("cuarenta") || remainingWords.startsWith("cuarenti")) {
                     startCharPos += "cuarent-".length();
                     numberResult += 40;
                 }
                 break;
-            case "cin":
-                // 50
-                if (remainingWords.startsWith("cincuenta y ")) {
-                    startCharPos += "cincuenta y ".length();
-                    numberResult += 50;
-                } else if (remainingWords.startsWith("cincuenta ")) {
-                    startCharPos += "cincuenta ".length();
-                    numberResult += 50;
-                } else if (remainingWords.startsWith("cincuenta")) {
+            case "cin": // 50
+                if (remainingWords.startsWith("cincuenta") || remainingWords.startsWith("cincuenti")) {
                     startCharPos += "cincuenta".length();
                     numberResult += 50;
                 }
                 break;
 
             case "qui": // 500
-                if (remainingWords.startsWith("quinientos y ")) {
-                    startCharPos += "quinientos y ".length();
-                    numberResult += 500;
-                } else if (remainingWords.startsWith("quinientos ")) {
-                    startCharPos += "quinientos ".length();
-                    numberResult += 500;
-                } else if (remainingWords.startsWith("quinientos")) {
+                if (remainingWords.startsWith("quinientos") || remainingWords.startsWith("quinientas")) {
                     startCharPos += "quinientos".length();
                     numberResult += 500;
                 }
                 break;
 
             case "sei": // 600
-                if (remainingWords.startsWith("seiscientos")) {
+                if (remainingWords.startsWith("seiscientos") || remainingWords.startsWith("seiscientas")) {
                     numberResult += 600;
                     countHundredsTermination(remainingWords);
                 }
                 break;
 
             case "ses": // 60
-                if (remainingWords.startsWith("sesenta")) {
+                if (remainingWords.startsWith("sesenta") || remainingWords.startsWith("sesenti")) {
                     numberResult += 60;
                     countTensTermination(remainingWords);
                 }
                 break;
 
             case "set": // 70 - 700
-                if (remainingWords.startsWith("setenta")) {
+                if (remainingWords.startsWith("setenta") || remainingWords.startsWith("setenti")) {
                     numberResult += 70;
                     countTensTermination(remainingWords);
-                } else if (remainingWords.startsWith("setecientos")) {
+                } else if (remainingWords.startsWith("setecientos") || remainingWords.startsWith("setecientas")) {
                     numberResult += 700;
                     countHundredsTermination(remainingWords);
                 }
                 break;
 
             case "och": // 80 - 800
-                if (remainingWords.startsWith("ochenta")) {
+                if (remainingWords.startsWith("ochenta") || remainingWords.startsWith("ochenti")) {
                     numberResult += 80;
                     countTensTermination(remainingWords);
-                } else if (remainingWords.startsWith("ochocientos")) {
+                } else if (remainingWords.startsWith("ochocientos") || remainingWords.startsWith("ochocientas")) {
                     numberResult += 800;
                     countHundredsTermination(remainingWords);
                 }
                 break;
 
             case "nov": // 90 - 900
-                if (remainingWords.startsWith("noventa")) {
+                if (remainingWords.startsWith("noventa") || remainingWords.startsWith("noventi")) {
                     numberResult += 90;
                     countTensTermination(remainingWords);
-                } else if (remainingWords.startsWith("novecientos")) {
+                } else if (remainingWords.startsWith("novecientos") || remainingWords.startsWith("novecientas")) {
                     numberResult += 900;
                     countHundredsTermination(remainingWords);
                 }
@@ -300,11 +253,7 @@ public class NumeralConverter {
             return;
         }
         tempRemainingWords = tempRemainingWords.substring(3);
-        if (tempRemainingWords.startsWith("enta y")) {
-            startCharPos += "---enta y ".length();
-        } else if (tempRemainingWords.startsWith("enta ")) {
-            startCharPos += "---enta ".length();
-        } else if (tempRemainingWords.startsWith("enta")) {
+        if (tempRemainingWords.startsWith("enta") || tempRemainingWords.startsWith("enti")) {
             startCharPos += "---enta".length();
         }
     }
@@ -315,11 +264,7 @@ public class NumeralConverter {
             return;
         }
         tempRemainingWords = tempRemainingWords.substring(4);
-        if (tempRemainingWords.startsWith("cientos y")) {
-            startCharPos += "----cientos y ".length();
-        } else if (tempRemainingWords.startsWith("cientos ")) {
-            startCharPos += "----cientos ".length();
-        } else if (tempRemainingWords.startsWith("cientos")) {
+        if (tempRemainingWords.startsWith("cientos") || tempRemainingWords.startsWith("cientas")) {
             startCharPos += "----cientos".length();
         }
     }
@@ -328,5 +273,9 @@ public class NumeralConverter {
         string = Normalizer.normalize(string, Normalizer.Form.NFD);
         string = string.replaceAll("[\\p{InCombiningDiacriticalMarks}]", "");
         return string;
+    }
+
+    public static boolean isNumber(String num) {
+        return num == null ? false : num.matches("((-|\\+)?[0-9]+(\\.[0-9]+)?+(\\,[0-9]+)?)+");
     }
 }
